@@ -58,9 +58,17 @@ public class Player : MonoBehaviour
         RaycastHit hit;
         if(Physics.Raycast(ray, out hit))
         {
-            if(Input.GetMouseButtonDown(0))
+            if(hit.transform.tag == "Collectable")
             {
-                if(hit.transform.tag == "Collectable")
+                Outline outline = hit.transform.gameObject.GetComponent<Outline>();
+                if(outline == null)
+                {
+                    outline = hit.transform.gameObject.AddComponent<Outline>();
+                }
+
+                outline.enabled = true;
+
+                if(Input.GetMouseButtonDown(0))
                 {
                     GameController.COLLECT.Invoke(hit.transform);
                 }
