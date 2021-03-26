@@ -46,7 +46,7 @@ public class GameController : MonoBehaviour
     {
         Debug.Log("UnityAction COLLECT Invoked to: " + transform.name);
         inventory.collected.Add(transform.gameObject);
-        Destroy(transform.gameObject);
+        transform.gameObject.SetActive(false);
     }
 
     private void OnRaycastPlayerHit(Transform transform)

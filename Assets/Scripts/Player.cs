@@ -54,21 +54,24 @@ public class Player : MonoBehaviour
         characterController.Move(speed * Time.deltaTime * move);
 
         //Character rotatation with the mouse
-        rotateX = Input.GetAxis("Mouse X");
-        rotateY = Input.GetAxis("Mouse Y");
-
-        characterController.transform.Rotate(0, rotateX * mouseSense, 0);
-        cameraPlayer.transform.Rotate(-rotateY*mouseSense, 0,0);
-
-        currentRotation = cameraPlayer.transform.localEulerAngles;
-
-        if(currentRotation.x > 180)
+        if(Cursor.lockState == CursorLockMode.Locked)
         {
-            currentRotation.x -= 360;
-        }
+            rotateX = Input.GetAxis("Mouse X");
+            rotateY = Input.GetAxis("Mouse Y");
 
-        currentRotation.x = Mathf.Clamp(currentRotation.x, -limitAngle, limitAngle);
-        cameraPlayer.transform.localRotation = Quaternion.Euler(currentRotation);
+            characterController.transform.Rotate(0, rotateX * mouseSense, 0);
+            cameraPlayer.transform.Rotate(-rotateY*mouseSense, 0,0);
+
+            currentRotation = cameraPlayer.transform.localEulerAngles;
+
+            if(currentRotation.x > 180)
+            {
+                currentRotation.x -= 360;
+            }
+
+            currentRotation.x = Mathf.Clamp(currentRotation.x, -limitAngle, limitAngle);
+            cameraPlayer.transform.localRotation = Quaternion.Euler(currentRotation);
+        }
         
         //Get mouse button press and check if the lastHit is a Collectable to collect it
         if(Input.GetMouseButtonDown(0))
