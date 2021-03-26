@@ -2,17 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+//Custom type
+public class CollectableItem
+{
+    public GameObject collected;
+    public Texture2D textureImage;
+}
+
 public class Inventory
 {
     //Attributes
-    [HideInInspector] public List<GameObject> collected;
-    [HideInInspector] public List<Texture2D> textureImage;
+    [HideInInspector] public List<CollectableItem> collectables;
 
 
     //Constructor
     public Inventory()
     {
-        collected = new List<GameObject>();
-        textureImage = new List<Texture2D>();
+        collectables = new List<CollectableItem>();
     }
 }

@@ -32,6 +32,8 @@ public class GameController : MonoBehaviour
     //Public variables
     public Inventory inventory;
 
+    public Player player;
+
     private void Awake() {
         DontDestroyOnLoad(this);
         inventory = new Inventory();
@@ -45,7 +47,10 @@ public class GameController : MonoBehaviour
     private void OnCollect(Transform transform)
     {
         Debug.Log("UnityAction COLLECT Invoked to: " + transform.name);
-        inventory.collected.Add(transform.gameObject);
+        CollectableItem item = new CollectableItem();
+        item.collected = transform.gameObject;
+        item.textureImage = RuntimePreviewGenerator.GenerateModelPreview(transform, 128, 128, true);
+        inventory.collectables.Add(item);
         transform.gameObject.SetActive(false);
     }
 

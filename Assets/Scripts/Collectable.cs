@@ -92,7 +92,10 @@ public class Collectable : MonoBehaviour
         }
         else
         {
-            StartCoroutine(SetTimerToOff());
+            if(this.gameObject.activeInHierarchy)
+            {
+                StartCoroutine(SetTimerToOff());
+            }
         }
     }
 }

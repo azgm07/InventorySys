@@ -13,6 +13,9 @@ public class MenuController : MonoBehaviour
 
     public GameObject buttonPrefab;
 
+    public float spawnDistance = 1f;
+    public float spawnHeight = 2f;
+
     private void Awake() {
         inventoryMenu.gameObject.SetActive(false);
         crosshair.gameObject.SetActive(true);
@@ -45,7 +48,11 @@ public class MenuController : MonoBehaviour
 
     private void SetInventory()
     {
-        for (int i = 0; i < GameController.Instance.inventory.collected.Count; i++)
+        foreach (Transform child in buttonArea) {
+            GameObject.Destroy(child.gameObject);
+        }
+        
+        for (int i = 0; i < GameController.Instance.inventory.collectables.Count; i++)
         {
             GameObject button = Instantiate(buttonPrefab);
             button.transform.SetParent(buttonArea);
@@ -63,20 +70,31 @@ public class MenuController : MonoBehaviour
             rawImage = invButton.rawImage;
             text = invButton.text;
 
-            GameObject collected = GameController.Instance.inventory.collected[i];
-            Texture2D texture = GameController.Instance.inventory.textureImage[i];
+            CollectableItem item = GameController.Instance.inventory.collectables[i];
             
-            text.text = collected.name;
-            rawImage.texture = texture;
+            text.text = item.collected.name;
+            rawImage.texture = item.textureImage;
 
-            button.GetComponent<Button>().onClick.AddListener(delegate{OnClickButton(button, collected, texture, i);});
+            button.GetComponent<Button>().onClick.AddListener(delegate{OnClickButton(button, item);});
         }
     }
 
-    private void OnClickButton(GameObject button, GameObject collected, Texture2D texture , int indexCollectable)
+    private void OnClickButton(GameObject button, CollectableItem item)
     {
         Destroy(button);
-        GameController.Instance.inventory.collected.RemoveAt(indexCollectable);
-        GameController.Instance.inventory.textureImage.RemoveAt(indexCollectable);
+        GameController.Instance.inventory.collectables.Remove(item);
+
+        Transform cameraTransform = GameController.Instance.player.cameraPlayer.transform;
+
+        Rigidbody itemRb = item.collected.GetComponent<Rigidbody>();
+        itemRb.isKinematic = false;
+        itemRb.useGravity = true;
+
+        Vector3 pos = new Vector3(cameraTransform.position.x, spawnHeight, cameraTransform.position.z);
+        
+        item.collected.transform.position = cameraTransform.forward * spawnDistance + pos;
+        item.collected.transform.rotation = cameraTransform.rotation;
+
+        item.collected.SetActive(true);
     }
 }
